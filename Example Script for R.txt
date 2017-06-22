@@ -1,0 +1,38 @@
+#Equation 1 from Korzekwa, et al. 1998
+
+#Defining equation_1 where a=Vmax1, b=Vmax2, c=Km1, d=Km2
+equation_1 = function(x,a,b,c,d){
+  (((a*x)/c+((b*x^2)/(c*d)))/(1+(x/c)+(x^2/(c*d))))
+}
+
+#Supplying the program with data
+#Note that the dataset must be named "keto" with the column names "Let" and "Rate"
+x = keto$Let
+y = keto$Rate
+
+#Performing the fit. Replace values for a, b, c, d with values extrapolated from Eadie Hofstee plots 
+fitmodel_keto_eqn_1 <- nls(y~equation_1(x,a,b,c,d), start = list(a=1.8,b=20.7,c=15.5,d=312),trace = T)
+
+#Summary provdies calculated parameters and standard error
+summary(fitmodel_keto_eqn_1)
+
+#Plots the data with the axis labels in the quotes
+plot(x,y,xlim = c(0,125),ylim = c(0,10),xlab = "[Letrozole] in uM",ylab = "Rate (pmol/nmol/min)")
+
+#Adds the fit line to the plot
+lines(x,predict(fitmodel_keto_eqn_1))
+
+
+Formula: y ~ equation_1(x, a, b, c, d)
+
+Parameters:
+  Estimate Std. Error t value Pr(>|t|)
+a   0.2338     0.4725   0.495    0.622
+b  32.3197    29.8679   1.082    0.283
+c   1.0169     4.7001   0.216    0.829
+d 559.0309   623.4600   0.897    0.373
+
+Residual standard error: 0.3885 on 62 degrees of freedom
+
+Number of iterations to convergence: 17 
+Achieved convergence tolerance: 9.877e-06
