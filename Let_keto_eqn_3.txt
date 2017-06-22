@@ -1,0 +1,23 @@
+#Equation 3 from Korzekwa, et al. 1998
+
+#Defining equation_3 where a=Vmax1, b=Vmax2, c=Km1, d=Km2
+equation_3 = function(x,a,b,c,d){
+  (((a*x)+(b/d)*x^2)/(c+x))
+}
+
+#Supplying the program with data
+#Note that the dataset must be named "keto" with the column names "Let" and "Rate"
+x = keto$Let
+y = keto$Rate
+
+#Performing the fit. Replace values for a, b, c, d with values extrapolated from Eadie Hofstee plots 
+fitmodel_keto_eqn_3 <- nls(y~equation_3(x,a,b,c,d), start = list(a=1.8,b=20.7,c=15.5,d=312),trace = T)
+
+#Summary provdies calculated parameters and standard error
+summary(fitmodel_keto_eqn_3)
+
+#Plots the data with the axis labels in the quotes
+plot(x,y,xlim = c(0,125),ylim = c(0,10),xlab = "[Letrozole] in uM",ylab = "Rate (pmol/nmol/min)")
+
+#Adds the fit line to the plot
+lines(x,predict(fitmodel_keto_eqn_3))
